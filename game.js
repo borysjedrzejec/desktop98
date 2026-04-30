@@ -1,11 +1,39 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('councilGame', () => ({
         // Default State
-        isMailOpen: false,
         suspicionLevel: 0,
         budget: -50000000,
         rotX: 0,
         rotY: 0,
+
+        // Desktop icons
+        selectedIcon: null,
+        desktopIcons: [
+            { id: 'mail', name: 'Outlook Express', img: 'ico/mail.ico' },
+            { id: 'folder', name: 'Documents', img: 'ico/directory_open_file_mydocs_2k.ico' },
+            { id: 'bin', name: 'Bin', img: 'ico/recycle_bin_empty.ico' }
+        ],
+
+        clearSelection() {
+            this.selectedIcon = null;
+        },
+
+        // Desktop windows
+
+        openWindows: [],
+
+        appsData: {
+        'mail': {
+            title: 'Outlook Express',
+            content: 'No new messages.',
+            width: 400
+        },
+        'bin': {
+            title: 'Bin',
+            content: 'Bin is empty.',
+            width: 300
+        }
+     },
 
         // Taskbar
         isStartOpen: false, 
@@ -38,7 +66,6 @@ document.addEventListener('alpine:init', () => {
             const currentG = Math.round(startCol.g + (endCol.g - startCol.g) * ratio);
             const currentB = Math.round(startCol.b + (endCol.b - startCol.b) * ratio);
 
-            // Zwracamy zmienne CSS oraz rotację 3D kamery
             return `
                 --bloom-R: ${currentR};
                 --bloom-G: ${currentG};
@@ -62,6 +89,31 @@ document.addEventListener('alpine:init', () => {
                 minute: '2-digit' 
             });
         },
+
+        openProgram(appId) {
+            // If opened, close.
+            if (this.openWindows.find(win => win.id === appId)) {
+                this.closeProgram(appId);
+                return;
+            }
+
+            const appInfo = this.appsData[appId];
+            
+            if (!appInfo) return; 
+
+            this.openWindows.push({
+                id: appId,
+                title: appInfo.title,
+                content: appInfo.content,
+                width: appInfo.width,
+                startX: 50 + Math.floor(Math.random() * 50),
+                startY: 50 + Math.floor(Math.random() * 50)
+            });
+        },
+
+        closeProgram(appId) {
+            this.openWindows = this.openWindows.filter(win => win.id !== appId);
+        }
     }))
 
     Alpine.data('draggableWindow', (startX = 50, startY = 50) => ({
@@ -79,9 +131,17 @@ document.addEventListener('alpine:init', () => {
         
         drag(e) {
             if (!this.isDragging) return;
+
+            let newX = e.clientX - this.offsetX;
+            let newY = e.clientY - this.offsetY;
+
+            const monitor = document.getElementById('desktop');
             
-            this.x = e.clientX - this.offsetX;
-            this.y = e.clientY - this.offsetY;
+            const maxX = monitor.clientWidth - this.$el.offsetWidth;
+            const maxY = monitor.clientHeight - this.$el.offsetHeight;
+            
+            this.x = Math.max(0, Math.min(newX, maxX));
+            this.y = Math.max(0, Math.min(newY, maxY));
         },
         
         dragEnd() {

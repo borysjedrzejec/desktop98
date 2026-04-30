@@ -18,36 +18,50 @@
     <div id="monitor-vignette">
         <div id="monitor-screen" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
             <div id="crt-container" class="crt-filter"></div>
-            <div class="desktop">
-                <div class="desktop-icon" x-on:click="isMailOpen = true">
-                    <img src="ico/mail.ico" alt="Outlook Express" style="width:32px; height:32px;" draggable="false">
-                    <p>Outlook Express</p>
-                </div>
+            <div id="desktop" @click.self="clearSelection()">
 
-            <div class="window" 
-                x-data="draggableWindow(150, 100)" 
-                :style="{ position: 'absolute', left: x + 'px', top: y + 'px', width: '300px' }"
-                x-show="isMailOpen" x-cloak>
-                    <div class="title-bar" 
-                        @mousedown.prevent="dragStart"
-                        @mousemove.window="drag" 
-                        @mouseup.window="dragEnd"
-                        style="cursor: grab;"
-                        :style="isDragging && { cursor: 'grabbing' }">
-                        <div class="title-bar-text" >Outlook Express</div>
-                        <div class="title-bar-controls">
-                            <button aria-label="Close" x-on:click="isMailOpen = false"></button>
-                        </div>
+                <!-- RENDER ICONS -->
+                <template x-for="icon in desktopIcons" :key="icon.id">
+        
+                    <div class="desktop-icon" 
+                        @click="selectedIcon = icon.id"
+                        @dblclick=" openProgram(icon.id)"
+                        @click.outside="selectedIcon === icon.id ? selectedIcon = null : null">
+                        
+                        <img :src="icon.img" alt="Icon">
+                        
+                        <span :class="selectedIcon === icon.id ? 'selected' : ''" 
+                            x-text="icon.name"></span>
                     </div>
                     
-                    <div class="window-body">
-                        <p>Internal Audit Warning!</p>
+                </template>
+                <!-- RENDER WINDOWS -->
+                <template x-for="win in openWindows" :key="win.id">
+                    
+                    <div class="window" 
+                        x-data="draggableWindow(win.startX, win.startY)" 
+                        :style="{ position: 'absolute', left: x + 'px', top: y + 'px', width: win.width + 'px' }">
                         
-                        <p>Suspicion Level: <strong x-text="suspicionLevel + '%'"></strong></p>
+                        <div class="title-bar" 
+                            @mousedown.prevent="dragStart" 
+                            @mousemove.window="drag" 
+                            @mouseup.window="dragEnd"
+                            style="cursor: grab;"
+                            :style="isDragging && { cursor: 'grabbing' }">
+                            
+                            <div class="title-bar-text" x-text="win.title"></div>
+                            
+                            <div class="title-bar-controls">
+                                <button aria-label="Close" @click="closeProgram(win.id)"></button>
+                            </div>
+                        </div>
                         
-                        <button x-on:click="suspicionLevel += 15">Ignore Audit Warning</button>
+                        <div class="window-body">
+                            <p x-text="win.content"></p>
+                        </div>
+                        
                     </div>
-                </div>
+                </template>
 
                     <button @click="processFraud(1000000)" @click="suspicionLevel = 80">Raise Suspicion</button>
                     <p>Value: <span x-text="budget"></span></p>
