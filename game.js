@@ -63,4 +63,29 @@ document.addEventListener('alpine:init', () => {
             });
         },
     }))
+
+    Alpine.data('draggableWindow', (startX = 50, startY = 50) => ({
+        x: startX,
+        y: startY,
+        isDragging: false,
+        offsetX: 0,
+        offsetY: 0,
+
+        dragStart(e) {
+            this.isDragging = true;
+            this.offsetX = e.clientX - this.x;
+            this.offsetY = e.clientY - this.y;
+        },
+        
+        drag(e) {
+            if (!this.isDragging) return;
+            
+            this.x = e.clientX - this.offsetX;
+            this.y = e.clientY - this.offsetY;
+        },
+        
+        dragEnd() {
+            this.isDragging = false;
+        }
+    }))
 })

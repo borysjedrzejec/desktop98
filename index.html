@@ -20,12 +20,20 @@
             <div id="crt-container" class="crt-filter"></div>
             <div class="desktop">
                 <div class="desktop-icon" x-on:click="isMailOpen = true">
-                    <img src="ico/mail.ico" alt="Outlook Express" style="width:32px; height:32px;">
+                    <img src="ico/mail.ico" alt="Outlook Express" style="width:32px; height:32px;" draggable="false">
                     <p>Outlook Express</p>
                 </div>
 
-                <div class="window" style="width: 400px; position: absolute; top: 100px; left: 150px;" x-show="isMailOpen" x-cloak>
-                    <div class="title-bar">
+            <div class="window" 
+                x-data="draggableWindow(150, 100)" 
+                :style="{ position: 'absolute', left: x + 'px', top: y + 'px', width: '300px' }"
+                x-show="isMailOpen" x-cloak>
+                    <div class="title-bar" 
+                        @mousedown.prevent="dragStart"
+                        @mousemove.window="drag" 
+                        @mouseup.window="dragEnd"
+                        style="cursor: grab;"
+                        :style="isDragging && { cursor: 'grabbing' }">
                         <div class="title-bar-text" >Outlook Express</div>
                         <div class="title-bar-controls">
                             <button aria-label="Close" x-on:click="isMailOpen = false"></button>
