@@ -28,7 +28,7 @@
                         @dblclick=" openProgram(icon.id)"
                         @click.outside="selectedIcon === icon.id ? selectedIcon = null : null">
                         
-                        <img :src="icon.img" alt="Icon">
+                        <img :src="icon.img" alt="Icon" draggable="false">
                         
                         <span :class="selectedIcon === icon.id ? 'selected' : ''" 
                             x-text="icon.name"></span>

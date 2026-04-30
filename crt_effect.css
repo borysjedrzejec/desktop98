@@ -184,7 +184,7 @@ body {
 
 #monitor-screen {
     position: relative;
-    background-color: #008080;
+    background-color: rgb(var(--bloom-R), var(--bloom-G), var(--bloom-B));
     overflow: hidden;
 
     aspect-ratio: 4 / 3;
