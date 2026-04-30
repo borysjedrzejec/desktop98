@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Section 114: Book Cooking Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://unpkg.com/98.css">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="crt_effect.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="game.js"></script>
+</head>
+
+<body x-data="councilGame" @mousemove="updateCamera" >
+    <div id="background"></div>
+
+    <div id="glass-container"></div>
+    <div id="monitor-vignette">
+        <div id="monitor-screen" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
+            <div id="crt-container" class="crt-filter"></div>
+            <div class="desktop">
+                <div class="desktop-icon" x-on:click="isMailOpen = true">
+                    <img src="ico/mail.ico" alt="Outlook Express" style="width:32px; height:32px;">
+                    <p>Outlook Express</p>
+                </div>
+
+                <div class="window" style="width: 400px; position: absolute; top: 100px; left: 150px;" x-show="isMailOpen" x-cloak>
+                    <div class="title-bar">
+                        <div class="title-bar-text" >Outlook Express</div>
+                        <div class="title-bar-controls">
+                            <button aria-label="Close" x-on:click="isMailOpen = false"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="window-body">
+                        <p>Internal Audit Warning!</p>
+                        
+                        <p>Suspicion Level: <strong x-text="suspicionLevel + '%'"></strong></p>
+                        
+                        <button x-on:click="suspicionLevel += 15">Ignore Audit Warning</button>
+                    </div>
+                </div>
+
+                    <button @click="processFraud(1000000)" @click="suspicionLevel = 80">Raise Suspicion</button>
+                    <p>Value: <span x-text="budget"></span></p>
+                    <button @click="suspicionLevel = 0">Reset Suspicion</button>
+
+                <div class="taskbar" x-data="councilGame">
+
+                    <div style="position: relative;">
+                        
+                        <button x-on:click="isStartOpen = !isStartOpen" 
+                                style="font-weight: bold; padding: 2px 5px;">
+                            <img src="ico/windows.ico" alt="Start" style="width: 16px; vertical-align: middle;"> Start
+                        </button>
+
+                        <div class="window start-menu" 
+                            x-show="isStartOpen" 
+                            x-cloak 
+                            x-on:click.outside="isStartOpen = false">
+                            
+                            <div class="title-bar" style="background: linear-gradient(90deg, navy, #1084d0);">
+                                <div class="title-bar-text">Council OS</div>
+                            </div>
+                            <div class="window-body" style="margin: 0; padding: 5px;">
+                                <button style="width: 100%; text-align: left; margin-bottom: 3px;">Outlook Express</button>
+                                <button style="width: 100%; text-align: left; margin-bottom: 3px;">Microsoft Excel</button>
+                                <hr style="margin: 5px 0;">
+                                <button style="width: 100%; text-align: left;">Log Off...</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="status-bar" style="margin: 0;">
+                        <p class="status-bar-field" style="padding: 2px 10px;" x-text="currentTime"></p>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</div>
+</body>
+</html>
