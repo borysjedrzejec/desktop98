@@ -73,7 +73,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         bootSystem() {
-            if (this.loginPassword !== 'admin') {
+            if (!this.loginPassword) {
                 this.playSound('error');
                 return;
             }
@@ -86,7 +86,7 @@ document.addEventListener('alpine:init', () => {
                 this.isStarted = true;
             }, 4000);
         },
-        
+
         // Metody
         updateCamera(e) {
             const x = (e.clientX / window.innerWidth) * 2 - 1;
