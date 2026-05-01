@@ -18,22 +18,33 @@ document.addEventListener('alpine:init', () => {
             this.selectedIcon = null;
         },
 
-        // Desktop windows
-
+        // Desktop windows data
         openWindows: [],
 
         appsData: {
-        'mail': {
-            title: 'Outlook Express',
-            content: 'No new messages.',
-            width: 400
+            'mail': {
+                title: 'Outlook Express',
+                content: 'No new messages.',
+                width: 400
+            },
+            'bin': {
+                title: 'Bin',
+                content: 'Bin is empty.',
+                width: 300
+            }
         },
-        'bin': {
-            title: 'Bin',
-            content: 'Bin is empty.',
-            width: 300
-        }
-     },
+
+        // Audio data
+        sounds: {
+            clicks: [
+            new Audio('sounds/mouse-click-1.mp3'),
+            new Audio('sounds/mouse-click-2.mp3'),
+            new Audio('sounds/mouse-click-3.mp3'),
+            new Audio('sounds/mouse-click-4.mp3'),
+            new Audio('sounds/mouse-click-5.mp3')
+            ],
+            error: new Audio('sounds/error.mp3')
+        },
 
         // Taskbar
         isStartOpen: false, 
@@ -113,6 +124,36 @@ document.addEventListener('alpine:init', () => {
 
         closeProgram(appId) {
             this.openWindows = this.openWindows.filter(win => win.id !== appId);
+        },
+
+        playSound(soundName) {
+            if (!this.sounds[soundName]) {
+                console.warn(`No sound file for: ${soundName}`);
+                return;
+            }
+
+            const soundClone = this.sounds[soundName].cloneNode(true);
+            
+            soundClone.volume = 0.6; 
+            
+            soundClone.play().catch(error => {
+                console.warn('Web Audio Error:', error);
+            });
+        },
+
+        playRandomClick() {
+            const clickArray = this.sounds.clicks;
+            
+            const randomIndex = Math.floor(Math.random() * clickArray.length);
+            
+            const soundClone = clickArray[randomIndex].cloneNode(true);
+            
+            soundClone.volume = 0.2; 
+            
+            soundClone.play().then(() => {
+                soundClone.playbackRate = 1.2;
+            }).catch(() => {
+            });
         }
     }))
 

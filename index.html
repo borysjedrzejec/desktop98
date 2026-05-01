@@ -16,7 +16,7 @@
 
     <div id="glass-container"></div>
     <div id="monitor-vignette">
-        <div id="monitor-screen" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
+        <div id="monitor-screen" @mousedown="playRandomClick()" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
             <div id="crt-container" class="crt-filter"></div>
             <div id="desktop" @click.self="clearSelection()">
 
@@ -63,7 +63,7 @@
                     </div>
                 </template>
 
-                    <button @click="processFraud(1000000)" @click="suspicionLevel = 80">Raise Suspicion</button>
+                    <button @click="playSound('error'); processFraud(1000000); suspicionLevel++">Raise Suspicion</button>
                     <p>Value: <span x-text="budget"></span></p>
                     <button @click="suspicionLevel = 0">Reset Suspicion</button>
 
