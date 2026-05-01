@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Section 114: Book Cooking Simulator</title>
+    <title>Prototype</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://unpkg.com/98.css">
     <link rel="stylesheet" href="base.css">
@@ -16,8 +16,64 @@
 
     <div id="glass-container"></div>
     <div id="monitor-vignette">
-        <div id="monitor-screen" @mousedown="playRandomClick()" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
+        <div id="monitor-screen" @mousedown="playRandomClick()" @keydown="playKeystroke($event)" :style="`transform: rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1);` + bloomColor">
             <div id="crt-container" class="crt-filter"></div>
+
+            <div id="boot-screen" 
+                x-show="!isStarted, !isBooting" 
+                x-transition.opacity.duration.200ms>
+                
+                <div class="window" style="width: 400px;">
+                    
+                    <div class="title-bar">
+                        <div class="title-bar-text">Welcome to Windows</div>
+                        <div class="title-bar-controls">
+                            <button aria-label="Close" @click="playSound('error')"></button>
+                        </div>
+                    </div>
+                    
+                    <div class="window-body" style="display: flex; padding: 12px; gap: 16px;">
+                        
+                        <div style="display: flex; align-items: flex-start;">
+                            <img src="ico/key_win_alt.ico" alt="Keys" style="width: 32px; height: 32px; image-rendering: pixelated;">
+                        </div>
+
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 12px;">
+                            <p style="margin: 0;">Type a username and password to log on to Windows.</p>
+                            
+                            <div style="display: flex; flex-direction: column; gap: 6px;">
+                                <div class="field-row" style="align-items: center;">
+                                    <label for="username" style="width: 120px;">User name:</label>
+                                    <input id="username" type="text" x-model="loginUsername" style="width: 100%;">
+                                </div>
+                                
+                                <div class="field-row" style="align-items: center;">
+                                    <label for="password" style="width: 120px;">Password:</label>
+                                    <input id="password" type="password" 
+                                        x-model="loginPassword" 
+                                        @keydown.enter="bootSystem()" 
+                                        style="width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <button style="width: 75px;" @click="bootSystem()">OK</button>
+                            <button style="width: 75px;" @click="playSound('error')">Cancel</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div id="splash-screen" 
+                x-show="isBooting" 
+                x-transition.opacity.duration.500ms>
+                
+                <img src="images/boot.jpg" alt="System Loading">
+                
+            </div>
+
             <div id="desktop" @click.self="clearSelection()">
 
                 <!-- RENDER ICONS -->

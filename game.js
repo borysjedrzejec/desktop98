@@ -1,6 +1,11 @@
 document.addEventListener('alpine:init', () => {
     Alpine.data('councilGame', () => ({
-        // Default State
+        // Game state
+        isStarted: false,
+        isBooting: false,
+        loginPassword: '',
+        loginUsername: '',
+
         suspicionLevel: 0,
         budget: -50000000,
         rotX: 0,
@@ -36,12 +41,20 @@ document.addEventListener('alpine:init', () => {
 
         // Audio data
         sounds: {
+            startup: new Audio('sounds/startup.mp3'),
             clicks: [
             new Audio('sounds/mouse-click-1.mp3'),
             new Audio('sounds/mouse-click-2.mp3'),
             new Audio('sounds/mouse-click-3.mp3'),
             new Audio('sounds/mouse-click-4.mp3'),
             new Audio('sounds/mouse-click-5.mp3')
+            ],
+            keys: [
+            new Audio('sounds/keyboard-1.mp3'),
+            new Audio('sounds/keyboard-2.mp3'),
+            new Audio('sounds/keyboard-3.mp3'),
+            new Audio('sounds/keyboard-4.mp3'),
+            new Audio('sounds/keyboard-5.mp3')
             ],
             error: new Audio('sounds/error.mp3')
         },
@@ -59,6 +72,21 @@ document.addEventListener('alpine:init', () => {
             }, 1000);
         },
 
+        bootSystem() {
+            if (this.loginPassword !== 'admin') {
+                this.playSound('error');
+                return;
+            }
+
+            this.playSound('startup'); 
+            this.isBooting = true;
+
+            setTimeout(() => {
+                this.isBooting = false;
+                this.isStarted = true;
+            }, 4000);
+        },
+        
         // Metody
         updateCamera(e) {
             const x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -154,7 +182,22 @@ document.addEventListener('alpine:init', () => {
                 soundClone.playbackRate = 1.2;
             }).catch(() => {
             });
-        }
+        },
+
+        playKeystroke(e) {
+            if (e.repeat) return;
+
+            const tagName = e.target.tagName;
+            if (tagName !== 'INPUT' && tagName !== 'TEXTAREA') return;
+
+            const keyArray = this.sounds.keys;
+            const randomIndex = Math.floor(Math.random() * keyArray.length);
+            const soundClone = keyArray[randomIndex].cloneNode(true);
+            
+            soundClone.volume = 0.3; 
+            
+            soundClone.play().catch(() => {});
+        },
     }))
 
     Alpine.data('draggableWindow', (startX = 50, startY = 50) => ({

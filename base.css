@@ -15,6 +15,40 @@
   font-style: normal;
 }
 
+#boot-screen {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    
+    background-color: #008080; 
+    z-index: 90;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#splash-screen {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    
+    background-color: #000000; 
+    
+    z-index: 91; 
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: url('ico/cursor_wait.ico'), wait; 
+}
+
+#splash-screen img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
 /* .desktop > .window {animation: chromatic-jitter 3s steps(1) infinite;} */
 #desktop {
     position: absolute;
@@ -86,7 +120,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 3px;
-    z-index: 99;
+    z-index: 20;
 }
 
 .start-menu {
