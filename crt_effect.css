@@ -197,8 +197,8 @@ body {
 
     transform: 
         translateZ(0)
-        rotateX(0.2deg) 
-        rotateY(-0.2deg) 
+        rotateX(0.3deg) 
+        rotateY(-0.3deg) 
         scale(1.0);
     
     transition: transform 0.2s ease-out;

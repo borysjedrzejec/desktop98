@@ -51,11 +51,11 @@ document.addEventListener('alpine:init', () => {
             ],
             keys: [
             new Audio('sounds/keyboard-1.mp3'),
-            new Audio('sounds/keyboard-2.mp3'),
             new Audio('sounds/keyboard-3.mp3'),
             new Audio('sounds/keyboard-4.mp3'),
             new Audio('sounds/keyboard-5.mp3')
             ],
+            spacebar: new Audio('sounds/spacebar.mp3'),
             error: new Audio('sounds/error.mp3')
         },
 
@@ -179,7 +179,7 @@ document.addEventListener('alpine:init', () => {
             soundClone.volume = 0.2; 
             
             soundClone.play().then(() => {
-                soundClone.playbackRate = 1.2;
+                soundClone.playbackRate = 1;
             }).catch(() => {
             });
         },
@@ -189,6 +189,13 @@ document.addEventListener('alpine:init', () => {
 
             const tagName = e.target.tagName;
             if (tagName !== 'INPUT' && tagName !== 'TEXTAREA') return;
+
+            if (e.code === 'Space') {
+                const spaceClone = this.sounds.spacebar.cloneNode(true);
+                spaceClone.play().catch(() => {});
+                
+                return; 
+            }
 
             const keyArray = this.sounds.keys;
             const randomIndex = Math.floor(Math.random() * keyArray.length);
